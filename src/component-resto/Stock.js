@@ -12,7 +12,9 @@ function Stock(props) {
           <div key={obj.id} className="items">
             <label>{obj.label}</label>
             <div className="amount">{obj.amount}</div>
-            <button>
+            <button onClick={()=>{
+              props.onItemAdded(obj);
+              }}>
               <FaPlusCircle />
             </button>
           </div>

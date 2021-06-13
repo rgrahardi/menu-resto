@@ -216,6 +216,7 @@ const INTIIAL_MENU = [
 function App() {
   const [stockItems, setStockItems] = useState(INITIAL_STOCK)
   const [menuItems, setMenuItems] = useState(INTIIAL_MENU)
+  const [orderItems, setOrderItems] = useState({})
 
   // didalam hook useEffect kita buat arrow function sebagai parameter pertama
   // useState akan dibuat menjadi parameter kedua
@@ -247,12 +248,40 @@ function App() {
 
   return (
     <div className="app">
-      <Stock items={stockItems} />
+      <Stock items={stockItems} 
+        onItemAdded={obj =>{
+        setStockItems(currentItems => {
+        const newStockItems = [...currentItems];
+        const item = newStockItems.find(o => o.id === obj.id);
+        item.amount += 1;
+        return newStockItems;
+        })
+        }}
+      />
+
       {/* di menu kita memiliki props bernama items dan event onItemSelected,
           perhatikan cara kerja reactjs buat functionnya sebagai props biar nanti bisa dijadikan argument componenet, terus dikomponent menu, karena ini function onItemSelected adalah props menu, maka buat function callback untuk menghandle proses eksekusi functionnya. jadi functionnya akan dieksekusi ketika event onClick yang dibuat pada emenent Menu */}
           {/* props items menyimpan value sebuah state */}
       <Menu items={menuItems} onItemSelected={obj => {
-        console.log('stok sebelum dikurangi', obj)
+
+        setOrderItems(currentOrders => {
+          const newOrders = {
+            ...currentOrders
+          }
+          if (!newOrders[obj.label]) {
+            newOrders[obj.label] = {
+              ...obj,
+              subtotal: obj.price,
+              amount: 1
+            };
+          } else {
+            const order = newOrders[obj.label];
+            order.amount += 1;
+            order.subtotal = order.price * order.amount;
+          }
+          return newOrders;
+        })
+
         // jadi ceritanya kita ingin melakukan update dengan merubah nilai stockItems, sebenernya tidak merubah hanya menduplikat saja, tapi ini dianggap perubahasan oleh state
         setStockItems((currentItems) => {
           // buat duplikat stock yang sekarang  
@@ -269,7 +298,32 @@ function App() {
           return newStockItems;
         });
       }}/>
-      <Order />
+      <Order items={orderItems} 
+        onItemRemoved={(obj)=>{
+          setOrderItems( currentOrders =>{
+          const newOrders = {...currentOrders}
+          const order = newOrders[obj.label];
+          order.amount -= 1;
+          if(order.amount === 0 ){
+          delete newOrders[obj.label];
+          } else {
+            order.subtotal = order.price * order.amount;
+          }
+          return newOrders;
+          })
+          setStockItems((currentItems) => {
+            const newStockItems = [...currentItems];
+            obj.ingredients.forEach((ing) => {
+              newStockItems.forEach((stock) => {
+                if (stock.id === ing.id) {
+                  stock.amount += ing.amount;
+                }
+              });
+            });
+            return newStockItems;
+          });
+
+        }}/>
     </div>
   )
 }
