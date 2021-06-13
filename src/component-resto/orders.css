@@ -1,0 +1,18 @@
+.orders {
+    position: relative;
+    padding-bottom: 44px !important;
+}
+
+.orders h4 {
+    border-top: 1px solid black;
+    padding-top: 12px;
+    position: absolute;
+    bottom: 12px;
+    left: 12px;
+    right: 12px;
+}
+
+.orders .items {
+    display: flex;
+    justify-content: space-between;
+}

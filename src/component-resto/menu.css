@@ -1,0 +1,14 @@
+.menu .items{
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  align-items: start;
+}
+
+.menu .items label {
+  width: 75%;
+}
+
+.menu .items .price {
+  width: 5em;
+}

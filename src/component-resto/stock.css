@@ -1,0 +1,18 @@
+.stock .items{
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  align-items: start;
+}
+
+.stock .items label {
+  width: 75%;
+}
+
+.stock .items .amount {
+  display: inline-block;
+}
+
+.stock .items button {
+  padding-top: 2px;
+}
